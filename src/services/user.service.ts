@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { pool } from '../../src/config/db';
-import { userRepository } from '../../src/repositories/user.repository';
+import { pool } from '../config/db';
+import { userRepository } from '../repositories/user.repository';
 import { CreateUserDTO, LoginDTO, AuthPayload } from '../types/user.types';
 
 const SALT_ROUNDS = 10;

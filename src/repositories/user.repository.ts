@@ -1,4 +1,4 @@
-import { pool } from '../../src/config/db';
+import { pool } from '../config/db';
 import { User, CreateUserDTO } from '../types/user.types';
 
 export const userRepository = {
