@@ -1,4 +1,5 @@
 import { productRepository } from '../repositories/product.repository';
+import { uploadService } from './upload.service';
 import { CreateProductDTO, ProductFilters } from '../types/product.types';
 
 export const productService = {
@@ -25,11 +26,18 @@ export const productService = {
       throw new Error('El precio debe ser mayor o igual a 0');
     }
 
+    if (!data.image_url?.trim()) {
+      throw new Error('La imagen del producto es requerida');
+    }
+
+    if (!uploadService.isCloudinaryUrl(data.image_url)) {
+      throw new Error('La imagen debe subirse mediante POST /api/upload/product-image');
+    }
+
     return productRepository.create(sellerId, universityId, data);
   },
 
   async delete(id: string, sellerId: string) {
-    // Solo el dueño puede eliminar, y solo si está disponible
     const product = await productRepository.findById(id);
     if (!product) throw new Error('Producto no encontrado');
     if (product.seller_id !== sellerId) throw new Error('No tienes permiso para eliminar este producto');
@@ -37,5 +45,13 @@ export const productService = {
 
     const deleted = await productRepository.delete(id, sellerId);
     if (!deleted) throw new Error('No se pudo eliminar el producto');
+
+    if (product.image_public_id) {
+      try {
+        await uploadService.deleteProductImage(product.image_public_id);
+      } catch {
+        // La imagen en Cloudinary se limpia en segundo plano; el producto ya se eliminó en BD
+      }
+    }
   },
 };

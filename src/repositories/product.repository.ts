@@ -66,8 +66,9 @@ export const productRepository = {
   ): Promise<Product> {
     const result = await pool.query<Product>(
       `INSERT INTO products
-         (seller_id, university_id, name, description, price, is_donation, category, condition, image_url)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+         (seller_id, university_id, name, description, price, is_donation,
+          category, condition, image_url, image_public_id)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
        RETURNING *`,
       [
         sellerId,
@@ -78,7 +79,8 @@ export const productRepository = {
         data.is_donation,
         data.category,
         data.condition,
-        data.image_url ?? null,
+        data.image_url,
+        data.image_public_id ?? null,
       ]
     );
     return result.rows[0];

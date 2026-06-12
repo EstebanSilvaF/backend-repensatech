@@ -88,9 +88,10 @@ CREATE TABLE products (
   is_donation    BOOLEAN           NOT NULL DEFAULT FALSE,
   category       product_category  NOT NULL,
   condition      product_condition NOT NULL,
-  status         product_status    NOT NULL DEFAULT 'available',
-  image_url      TEXT,
-  created_at     TIMESTAMPTZ       NOT NULL DEFAULT NOW(),
+  status            product_status    NOT NULL DEFAULT 'available',
+  image_url         TEXT            NOT NULL,
+  image_public_id   TEXT,
+  created_at        TIMESTAMPTZ       NOT NULL DEFAULT NOW(),
   updated_at     TIMESTAMPTZ       NOT NULL DEFAULT NOW(),
 
   -- Si es donación el precio debe ser 0

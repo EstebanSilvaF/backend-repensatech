@@ -46,12 +46,15 @@ export const productController = {
   // POST /api/products
   async create(req: AuthRequest, res: Response): Promise<void> {
     try {
-      const { name, description, price, is_donation, category, condition, image_url } = req.body;
+      const {
+        name, description, price, is_donation, category, condition,
+        image_url, image_public_id,
+      } = req.body;
 
       const product = await productService.create(
         req.user!.userId,
         req.user!.universityId,
-        { name, description, price, is_donation, category, condition, image_url }
+        { name, description, price, is_donation, category, condition, image_url, image_public_id }
       );
 
       res.status(201).json(product);

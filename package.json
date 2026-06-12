@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --watch src --exec ts-node src/index.ts",
-    "build": "tsc && node -e \"require('fs').mkdirSync('dist/db',{recursive:true});require('fs').copyFileSync('db/schema.sql','dist/db/schema.sql')\"",
+    "db:reset": "ts-node scripts/reset-db.ts",
+    "cloudinary:check": "ts-node scripts/cloudinary-check.ts",
+    "build": "tsc && node -e \"const fs=require('fs');const d='dist/db';fs.mkdirSync(d,{recursive:true});fs.copyFileSync('db/schema.sql',d+'/schema.sql');fs.copyFileSync('db/seed.sql',d+'/seed.sql');\"",
     "start": "node dist/index.js"
   },
   "keywords": [],
@@ -15,16 +17,21 @@
   "type": "commonjs",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "cloudinary": "^2.10.0",
+    "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
+    "multer": "^2.1.1",
     "node-cron": "^4.2.1",
     "pg": "^8.21.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.1.0",
     "@types/node": "^25.9.1",
     "@types/node-cron": "^3.0.11",
     "@types/pg": "^8.20.0",

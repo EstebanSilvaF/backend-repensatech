@@ -20,19 +20,21 @@ export interface Product {
   category:      ProductCategory;
   condition:     ProductCondition;
   status:        ProductStatus;
-  image_url:     string | null;
-  created_at:    Date;
-  updated_at:    Date;
+  image_url:       string;
+  image_public_id: string | null;
+  created_at:      Date;
+  updated_at:      Date;
 }
 
 export interface CreateProductDTO {
-  name:        string;
-  description?: string;
-  price:       number;
-  is_donation: boolean;
-  category:    ProductCategory;
-  condition:   ProductCondition;
-  image_url?:  string;
+  name:             string;
+  description?:     string;
+  price:            number;
+  is_donation:      boolean;
+  category:         ProductCategory;
+  condition:        ProductCondition;
+  image_url:        string;
+  image_public_id?: string;
 }
 
 export interface ProductFilters {
