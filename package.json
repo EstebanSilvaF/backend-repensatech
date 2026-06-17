@@ -4,18 +4,26 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest run",
+    "postinstall": "prisma generate",
     "dev": "nodemon --watch src --exec ts-node src/index.ts",
-    "db:reset": "ts-node scripts/reset-db.ts",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:seed": "prisma db seed",
+    "db:reset": "prisma migrate reset --force",
     "cloudinary:check": "ts-node scripts/cloudinary-check.ts",
-    "build": "tsc && node -e \"const fs=require('fs');const d='dist/db';fs.mkdirSync(d,{recursive:true});fs.copyFileSync('db/schema.sql',d+'/schema.sql');fs.copyFileSync('db/seed.sql',d+'/seed.sql');\"",
+    "build": "prisma generate && tsc -p tsconfig.build.json",
     "start": "node dist/index.js"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@prisma/client": "^6.19.3",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.10.0",
     "cors": "^2.8.6",
@@ -23,8 +31,7 @@
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.1.1",
-    "node-cron": "^4.2.1",
-    "pg": "^8.21.0"
+    "node-cron": "^4.2.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
@@ -34,9 +41,10 @@
     "@types/multer": "^2.1.0",
     "@types/node": "^25.9.1",
     "@types/node-cron": "^3.0.11",
-    "@types/pg": "^8.20.0",
     "nodemon": "^3.1.14",
+    "prisma": "^6.19.3",
     "ts-node": "^10.9.2",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.9"
   }
 }
