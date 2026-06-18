@@ -2,11 +2,13 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-const UNIVERSITY_ID = 'a1b2c3d4-0001-0001-0001-000000000001';
-const ADMIN_ID = 'b1b2c3d4-0002-0002-0002-000000000099';
-const MARIA_ID = 'b1b2c3d4-0002-0002-0002-000000000001';
-const PRODUCT_1_ID = 'c1b2c3d4-0003-0003-0003-000000000001';
-const PRODUCT_2_ID = 'c1b2c3d4-0003-0003-0003-000000000002';
+/** IDs fijos cortos para desarrollo (formato texto, ~18 chars) */
+const UNIVERSITY_ID = 'cluniempresarial01';
+const ADMIN_ID = 'cladminrepensa001';
+const MARIA_ID = 'clmariaestud001';
+const CARLOS_ID = 'clcarlosestud001';
+const PRODUCT_1_ID = 'clprodarduino001';
+const PRODUCT_2_ID = 'clprodsensor001';
 
 async function main(): Promise<void> {
   await prisma.university.create({
@@ -39,7 +41,7 @@ async function main(): Promise<void> {
         role: 'student',
       },
       {
-        id: 'b1b2c3d4-0002-0002-0002-000000000002',
+        id: CARLOS_ID,
         universityId: UNIVERSITY_ID,
         fullName: 'Carlos Mendoza',
         email: 'carlos.mendoza@uniempresarial.edu.co',
