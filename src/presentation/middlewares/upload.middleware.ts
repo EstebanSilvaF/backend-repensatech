@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import multer from 'multer';
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_MIME_TYPES = new Set([
   'image/jpeg',
   'image/png',
