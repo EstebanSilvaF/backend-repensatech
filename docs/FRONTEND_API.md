@@ -239,18 +239,29 @@ export interface Chat {
   product_image?: string | null;
   buyer_name?: string;
   seller_name?: string;
+  buyer_university_name?: string;
+  seller_university_name?: string;
   /** Solo en listado */
   last_message?: string | null;
   last_message_at?: string | null;
 }
 
+export type MessageType = 'text' | 'appointment';
+
 export interface Message {
   id: string;
   chat_id: string;
   sender_id: string;
+  type: MessageType;
   content: string;
   created_at: string;
   sender_name?: string;
+}
+
+export interface AppointmentPayload {
+  day: string;
+  time: string;
+  location: string;
 }
 
 export interface Reservation {
@@ -333,7 +344,9 @@ export interface OpenChatRequest {
 }
 
 export interface SendMessageRequest {
-  content: string;
+  content?: string;
+  type?: MessageType;
+  appointment?: AppointmentPayload;
 }
 
 export interface ReserveProductRequest {
@@ -597,9 +610,28 @@ Abre chat con el vendedor del producto. Si ya existe, devuelve el existente.
 
 #### `POST /api/chats/:id/messages`
 
-**Body**: `SendMessageRequest`
+**Body** (`SendMessageRequest`):
 
-**Response `201`**: `Message`
+Mensaje de texto:
+
+```json
+{ "content": "Hola", "type": "text" }
+```
+
+Encuentro acordado:
+
+```json
+{
+  "type": "appointment",
+  "appointment": {
+    "day": "Miércoles",
+    "time": "2:00 PM",
+    "location": "Bloque E"
+  }
+}
+```
+
+**Response `201`**: `Message` (incluye `type`: `text` | `appointment`)
 
 No permite enviar si el chat ya tiene `status === 'delivery_confirmed'`.
 
@@ -616,6 +648,33 @@ Confirma entrega. Comprador o vendedor.
   "message": "Entrega confirmada. Transacción registrada en el historial."
 }
 ```
+
+---
+
+### WebSockets (socket.io) — Chat en vivo
+
+**URL**: mismo host que la API (en dev con Vite: proxy `/socket.io` → backend).
+
+**Autenticación** (handshake):
+
+```ts
+io(WS_URL, { auth: { token: '<JWT>' } });
+```
+
+**Eventos cliente → servidor**
+
+| Evento | Payload | Descripción |
+|--------|---------|-------------|
+| `chat:join` | `chatId` | Unirse a la sala del chat activo |
+| `chat:leave` | `chatId` | Salir de la sala |
+
+**Eventos servidor → cliente**
+
+| Evento | Payload | Descripción |
+|--------|---------|-------------|
+| `message:new` | `Message` | Nuevo mensaje en el chat |
+| `chat:updated` | `{ id, status, last_message?, last_message_at? }` | Actualiza preview del sidebar |
+| `chat:delivery_confirmed` | `{ chatId, status }` | Entrega confirmada |
 
 ---
 
@@ -822,7 +881,13 @@ export const api = {
   sendMessage: (chatId: string, content: string) =>
     request<Message>(`/chats/${chatId}/messages`, {
       method: 'POST',
-      body: JSON.stringify({ content }),
+      body: JSON.stringify({ content, type: 'text' }),
+    }),
+
+  sendAppointment: (chatId: string, appointment: AppointmentPayload) =>
+    request<Message>(`/chats/${chatId}/messages`, {
+      method: 'POST',
+      body: JSON.stringify({ type: 'appointment', appointment }),
     }),
 
   confirmDelivery: (chatId: string) =>

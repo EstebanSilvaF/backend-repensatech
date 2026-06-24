@@ -60,6 +60,49 @@ export function validateMessageContent(content: string): void {
   }
 }
 
+export function validateAppointmentPayload(appointment: {
+  day?: string;
+  time?: string;
+  location?: string;
+}): void {
+  if (!appointment.day?.trim() || !appointment.time?.trim() || !appointment.location?.trim()) {
+    throw new Error('Día, hora y lugar son requeridos para el encuentro');
+  }
+}
+
+export function formatProposalContent(appointment: {
+  day: string;
+  time: string;
+  location: string;
+}): string {
+  return `Propuesta de encuentro · ${appointment.day.trim()} · ${appointment.time.trim()} · ${appointment.location.trim()}`;
+}
+
+export function formatAcceptedContent(appointment: {
+  day: string;
+  time: string;
+  location: string;
+}): string {
+  return `Encuentro acordado · ${appointment.day.trim()} · ${appointment.time.trim()} · ${appointment.location.trim()}`;
+}
+
+export function formatRejectedContent(appointment: {
+  day: string;
+  time: string;
+  location: string;
+}): string {
+  return `Propuesta rechazada · ${appointment.day.trim()} · ${appointment.time.trim()} · ${appointment.location.trim()}`;
+}
+
+/** @deprecated Usar formatProposalContent, formatAcceptedContent o formatRejectedContent */
+export function formatAppointmentContent(appointment: {
+  day: string;
+  time: string;
+  location: string;
+}): string {
+  return formatAcceptedContent(appointment);
+}
+
 export function validateSendMessage(
   chat: Chat | null,
   senderId: string
