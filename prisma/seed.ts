@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-/** IDs fijos cortos para desarrollo (formato texto, ~18 chars) */
+
 const UNIVERSITY_ID = 'cluniempresarial01';
 const ADMIN_ID = 'cladminrepensa001';
 const MARIA_ID = 'clmariaestud001';

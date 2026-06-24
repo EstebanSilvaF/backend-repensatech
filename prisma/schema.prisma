@@ -65,6 +65,21 @@ enum ChatStatus {
   @@map("chat_status")
 }
 
+enum MessageType {
+  text
+  appointment
+
+  @@map("message_type")
+}
+
+enum AppointmentStatus {
+  pending
+  accepted
+  rejected
+
+  @@map("appointment_status")
+}
+
 enum NotificationType {
   reservation_confirmed
   reservation_expiring
@@ -202,11 +217,16 @@ model Chat {
 }
 
 model Message {
-  id        String   @id @default(cuid())
-  chatId    String   @map("chat_id")
-  senderId  String   @map("sender_id")
-  content   String
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  id                  String             @id @default(cuid())
+  chatId              String             @map("chat_id")
+  senderId            String             @map("sender_id")
+  type                MessageType        @default(text)
+  content             String
+  appointmentStatus   AppointmentStatus? @map("appointment_status")
+  appointmentDay      String?            @map("appointment_day") @db.VarChar(100)
+  appointmentTime     String?            @map("appointment_time") @db.VarChar(50)
+  appointmentLocation String?            @map("appointment_location") @db.VarChar(200)
+  createdAt           DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
 
   chat   Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
   sender User @relation(fields: [senderId], references: [id], onDelete: Restrict)
