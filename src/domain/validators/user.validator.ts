@@ -1,4 +1,4 @@
-import { CreateUserDTO, LoginDTO } from '../types/user.types';
+import { ChangePasswordDTO, CreateUserDTO, LoginDTO } from '../types/user.types';
 import { University } from '../types/university.types';
 import { User } from '../types/user.types';
 import { assertValid } from '../../shared/validation/validator';
@@ -20,12 +20,25 @@ const loginRules = [
   required('Correo y contraseña son requeridos', (data: LoginDTO) => data.password),
 ];
 
+const changePasswordRules = [
+  required('Todos los campos son requeridos', (data: ChangePasswordDTO) => data.current_password),
+  required('Todos los campos son requeridos', (data: ChangePasswordDTO) => data.new_password),
+  {
+    test: (data: ChangePasswordDTO) => data.new_password.length >= 8,
+    message: 'La contraseña debe tener mínimo 8 caracteres',
+  },
+];
+
 export function validateRegister(data: CreateUserDTO): void {
   assertValid(data, registerRules);
 }
 
 export function validateLogin(data: LoginDTO): void {
   assertValid(data, loginRules);
+}
+
+export function validateChangePassword(data: ChangePasswordDTO): void {
+  assertValid(data, changePasswordRules);
 }
 
 export function assertEmailAvailable(existing: User | null): void {
