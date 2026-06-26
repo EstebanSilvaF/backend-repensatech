@@ -45,4 +45,11 @@ export const userRepository = {
     });
     return mapUser(user);
   },
+
+  async updatePassword(id: string, password_hash: string): Promise<void> {
+    await prisma.user.update({
+      where: { id },
+      data: { passwordHash: password_hash },
+    });
+  },
 };

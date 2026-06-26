@@ -23,6 +23,11 @@ export interface LoginDTO {
   password: string;
 }
 
+export interface ChangePasswordDTO {
+  current_password: string;
+  new_password: string;
+}
+
 export interface AuthPayload {
   userId: string;
   universityId: string;
