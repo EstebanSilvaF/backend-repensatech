@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { cloudinary, ensureCloudinaryConfig } from '../src/config/cloudinary';
+import { cloudinary, ensureCloudinaryConfig } from '../src/infrastructure/config/cloudinary';
 
 async function check(): Promise<void> {
   ensureCloudinaryConfig();
